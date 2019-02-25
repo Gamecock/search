@@ -1,0 +1,8 @@
+#Build Files
+target/
+
+#Intellij
+.idea/
+
+#Macos
+.DS_Store
