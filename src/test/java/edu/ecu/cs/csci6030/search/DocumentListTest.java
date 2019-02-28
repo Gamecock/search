@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -33,8 +34,13 @@ public class DocumentListTest {
     public void scanTwoFileDirectoryTest() {
         assertEquals(2, docs.scanDir(new File("src/test/resources/twoFileDirectory")));
         assertEquals(2,docs.size());
-        assertEquals("fox.txt", docs.getFileName(0));
-        assertEquals("ipsum.txt", docs.getFileName(1));
+        //file order is reversed on Travis
+        String[] expected = new String[] {"fox.txt", "ipsum.txt"};
+        String[] actual = new String[2];
+        actual[0] = docs.getFileName(0);
+        actual[1] = docs.getFileName(1);
+        Arrays.sort(actual);
+        assertArrayEquals(expected, actual);
     }
 
     @Test
