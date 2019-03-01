@@ -1,5 +1,7 @@
 package edu.ecu.cs.csci6030.search;
 
+import java.util.Arrays;
+
 /**
  * @author Finch
  *
@@ -12,8 +14,13 @@ public class Query {
     private Integer separation;
 
     public Query(String term1, String term2, Integer separation) {
-        this.term1 = term1;
-        this.term2 = term2;
+        if (term1 == null) {
+            this.term1 = term2;
+            this.term2 = null;
+        } else {
+            this.term1 = term1;
+            this.term2 = term2;
+        }
         this.separation = separation;
     }
 
@@ -28,4 +35,47 @@ public class Query {
     public Integer getSeparation() {
         return separation;
     }
+
+    public int[] search(PositionalIndex index) {
+        int[] results = null;
+        int[] list1 = null;
+        PositionalPosting posting1 = null;
+        PositionalPosting posting2 = null;
+        if (term1 != null) {
+            posting1 = index.getPosting(term1);
+            list1 = posting1.getDocumentList();
+            results = Arrays.copyOf(list1, list1.length);
+        }
+        if (term2 != null) {
+            posting2 = index.getPosting(term2);
+            int[] list2 = posting1.getDocumentList();
+            results = Arrays.stream(list1).filter(x ->Arrays.stream(list2).anyMatch(y -> y == x)).toArray();
+        }
+        if (separation != null) results = intersectPosition(results, posting1, posting2, separation);
+        return results;
+    }
+
+    private int[] intersectPosition(int[] results, PositionalPosting posting1, PositionalPosting posting2, Integer separation) {
+        for (int document = 0 ; document < results.length; document++) {
+            boolean match = false;
+            int ptr1 = 0;
+            int ptr2 = 0;
+            int[] list1 = posting1.get(results[document]).getList();
+            int[] list2 = posting2.get(results[document]).getList();
+            while (ptr1 < list1.length & ptr2< list2.length){
+                if (Math.abs(list1[ptr1] -list2[ptr2]) <= separation+1) {
+                    match = true;
+                    break;//no need to check rest of the list
+                }
+                if (list1[ptr1] < list2[ptr2] ) {
+                    ptr1++;
+                } else {
+                    ptr2 ++;
+                }
+            }
+            if (!match) results[document] = -1;
+        }
+        return Arrays.stream(results).filter(x -> x>=0).toArray();
+    }
+
 }

@@ -3,6 +3,11 @@ package edu.ecu.cs.csci6030.search;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Finch
+ *
+ * This class maps terms to positional postings.
+ */
 public class PositionalIndex {
 
     private Map<String,PositionalPosting> index;

@@ -15,11 +15,11 @@ public class PositionalPosting {
         posting = new HashMap<>();
 
     }
-    public void add(Integer document, Integer position){
-        PostingList postingList = posting.get(document);
+    public void add(Integer documentId, Integer position){
+        PostingList postingList = posting.get(documentId);
         if (null == postingList) postingList = new PostingList();
         postingList.add(position);
-        posting.put(document, postingList);
+        posting.put(documentId, postingList);
     }
 
     public int size() {
