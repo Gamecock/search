@@ -78,7 +78,7 @@ public class QueryTest {
         EasyMock.expect(posting.get(5)).andReturn(list).times(2);
         EasyMock.expect(list.getList()).andReturn( new int[] {7, 9});
         EasyMock.expect(list.getList()).andReturn( new int[] {12, 14});
-        EasyMock.expect(list.getList()).andReturn( new int[] {1, 7, 11});
+        EasyMock.expect(list.getList()).andReturn( new int[] {6, 8, 18});
         EasyMock.expect(list.getList()).andReturn( new int[] {2, 4, 15});
         EasyMock.replay(index, posting, list);
         assertArrayEquals(expected,  query.search(index));

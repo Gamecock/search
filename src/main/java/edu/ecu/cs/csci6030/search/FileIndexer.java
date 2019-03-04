@@ -13,9 +13,11 @@ import java.util.regex.Pattern;
 public class FileIndexer {
 
     private PositionalIndex index;
+    private Stemmer stemmer = null;
 
-    public FileIndexer(PositionalIndex index) {
+    public FileIndexer(PositionalIndex index, Stemmer stemmer) {
         this.index = index;
+        this.stemmer = stemmer;
 
     }
 
@@ -36,7 +38,12 @@ public class FileIndexer {
             while ((line = br.readLine()) != null){
                 wordMatcher = wordPattern.matcher(line);
                 while (wordMatcher.find()) {
-                    word = line.substring(wordMatcher.start(), wordMatcher.end()).toLowerCase();
+                    word = wordMatcher.group();
+                    if (null != stemmer) {
+                        word = stemmer.stem(word);
+                    } else {
+                        word = word.toLowerCase();
+                    }
                     index.add(word, documentId, position++);
                 }
             }

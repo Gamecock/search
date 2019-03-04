@@ -1,5 +1,7 @@
 package edu.ecu.cs.csci6030.search;
 
+import org.tartarus.snowball.SnowballStemmer;
+
 import java.io.File;
 
 public class Indexer {

@@ -45,8 +45,8 @@ public class DocumentListTest {
 
     @Test
     public void recursiveScanTest() {
-        assertEquals(6, docs.scanDir(new File("src/test/resources")));
-        assertEquals(6, docs.size());
+        assertEquals(7, docs.scanDir(new File("src/test/resources")));
+        assertEquals(7, docs.size());
     }
 
     @Test

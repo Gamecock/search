@@ -7,6 +7,7 @@ import org.easymock.TestSubject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.tartarus.snowball.SnowballStemmer;
 
 import java.io.File;
 
@@ -23,6 +24,9 @@ public class IndexerTest {
 
     @Mock
     FileIndexer mockIndexer;
+
+
+    EnglishSnowballStemmer stemmer = null;
 
     @TestSubject
     Indexer indexer = new Indexer(mockDocs, mockIndexer);
@@ -69,7 +73,7 @@ public class IndexerTest {
     public void  returnDocumentListTest() {
         DocumentList docs = new DocumentList();
         PositionalIndex index = new PositionalIndex();
-        FileIndexer fileIndexer = new FileIndexer(index);
+        FileIndexer fileIndexer = new FileIndexer(index, stemmer);
         Indexer indexer = new Indexer(docs, fileIndexer);
         assertEquals(1, indexer.indexDirectory("src/test/resources/oneFileDirectory"));
         assertEquals(docs, indexer.getDocumentList());
@@ -77,7 +81,6 @@ public class IndexerTest {
         assertEquals(4, index.size());
         assertArrayEquals(new int[]{0}, index.getPosting("the").getDocumentList());
         assertArrayEquals(new int[]{1}, index.getPosting("king").get(0).getList());
-
     }
 
 }
