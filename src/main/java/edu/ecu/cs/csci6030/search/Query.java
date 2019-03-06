@@ -43,13 +43,33 @@ public class Query {
         PositionalPosting posting2 = null;
         if (term1 != null) {
             posting1 = index.getPosting(term1);
-            list1 = posting1.getDocumentList();
-            results = Arrays.copyOf(list1, list1.length);
+            //todo test null check
+            if (null != posting1) {
+                list1 = posting1.getDocumentList();
+                results = Arrays.copyOf(list1, list1.length);
+            } else {
+                separation = null;
+                //No point in measuring distance if term not in any documents;
+            }
         }
         if (term2 != null) {
             posting2 = index.getPosting(term2);
-            int[] list2 = posting1.getDocumentList();
-            results = Arrays.stream(list1).filter(x ->Arrays.stream(list2).anyMatch(y -> y == x)).toArray();
+            int[] list2 =null;
+            if (null != posting2) {
+                list2 = posting1.getDocumentList();
+                if (list1 == null) {
+                    results = Arrays.copyOf(list2, list2.length);
+                }
+            } else {
+                separation = null;
+                //No point in measuring distance if term not in any documents;
+                results = null;
+                //Intersection of results with null will be null
+            }
+            if (list1 != null & list2 != null ) {
+                final int[] list2copy = Arrays.copyOf(list2, list2.length);
+                results = Arrays.stream(list1).filter(x -> Arrays.stream(list2copy).anyMatch(y -> y == x)).toArray();
+            }
         }
         if (separation != null) results = intersectPosition(results, posting1, posting2, separation);
         return results;
@@ -60,6 +80,7 @@ public class Query {
             boolean match = false;
             int ptr1 = 0;
             int ptr2 = 0;
+            //todo add null check
             int[] list1 = posting1.get(results[document]).getList();
             int[] list2 = posting2.get(results[document]).getList();
             while (ptr1 < list1.length & ptr2< list2.length){
@@ -76,6 +97,11 @@ public class Query {
             if (!match) results[document] = -1;
         }
         return Arrays.stream(results).filter(x -> x>=0).toArray();
+    }
+
+    @Override
+    public String toString() {
+        return "Query: term1 ["+term1+"], term2 ["+term2+"], with separation: " + separation;
     }
 
 }
