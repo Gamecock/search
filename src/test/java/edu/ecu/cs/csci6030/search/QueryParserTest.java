@@ -12,6 +12,8 @@ public class QueryParserTest {
 
     private Stemmer stemmer;
 
+    Query query;
+
     @Before
     public void setup () {
         parser = new QueryParser(stemmer);
@@ -19,10 +21,10 @@ public class QueryParserTest {
 
     @Test
     public void parseProximityTest () {
-        parser.parse("United /5 States");
-        assertEquals("united", parser.getQuery().getTerm1());
-        assertEquals("states", parser.getQuery().getTerm2());
-        assertEquals((Integer)5, (Integer)parser.getQuery().getSeparation());
+        query = parser.parse("United /5 States");
+        assertEquals("united", query.getTerm1());
+        assertEquals("states", query.getTerm2());
+        assertEquals((Integer)5, (Integer)query.getSeparation());
     }
 
     @Test(expected = ParseFailureException.class)
@@ -37,17 +39,17 @@ public class QueryParserTest {
 
     @Test
     public void booleanQueryTest() {
-        parser.parse("United States");
-        assertEquals("united", parser.getQuery().getTerm1());
-        assertEquals("states", parser.getQuery().getTerm2());
-        assertNull(parser.getQuery().getSeparation());
+        query = parser.parse("United States");
+        assertEquals("united", query.getTerm1());
+        assertEquals("states", query.getTerm2());
+        assertNull(query.getSeparation());
     }
 
     @Test
     public void singleQueryTest() {
-        parser.parse("United");
-        assertEquals("united", parser.getQuery().getTerm1());
-        assertNull(parser.getQuery().getSeparation());
+        query = parser.parse("United");
+        assertEquals("united", query.getTerm1());
+        assertNull(query.getSeparation());
     }
 
     @Test
@@ -58,9 +60,9 @@ public class QueryParserTest {
                 //do nothing test will fail
         }
             parser = new QueryParser(stemmer);
-            parser.parse("walks /2 building");
-        assertEquals("walk", parser.getQuery().getTerm1());
-        assertEquals("build", parser.getQuery().getTerm2());
-        assertEquals((Integer)2, (Integer)parser.getQuery().getSeparation());
+            query = parser.parse("walks /2 building");
+        assertEquals("walk", query.getTerm1());
+        assertEquals("build", query.getTerm2());
+        assertEquals((Integer)2, (Integer)query.getSeparation());
     }
 }

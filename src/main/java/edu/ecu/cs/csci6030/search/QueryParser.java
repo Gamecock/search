@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 
 public class QueryParser {
 
-    private Query query;
     private Stemmer stemmer = null;
 
     private Pattern numberPattern;
@@ -15,9 +14,8 @@ public class QueryParser {
         this.stemmer = stemmer;
     }
 
-    public void parse(String input) throws ParseFailureException {
+    public Query parse(String input) throws ParseFailureException {
         Integer separation = null;
-        String term1=null;
         String term2=null;
 
 
@@ -39,23 +37,18 @@ public class QueryParser {
                 term2 = terms[1];
                 break;
         }
-        term1 = terms[0];
-        query = new Query(term1, term2, separation);
+        String term1 = terms[0];
+        return new Query(term1, term2, separation);
     }
 
     private Integer parseSeparation(String term) {
         Matcher matcher = numberPattern.matcher(term);
-        String sepString = null;
+        String sepString;
         if (matcher.find()) {
             sepString = matcher.group();
         } else {
             throw new ParseFailureException("No separation term.");
         }
         return Integer.parseInt(sepString);
-    }
-
-
-    public Query getQuery() {
-        return query;
     }
 }
