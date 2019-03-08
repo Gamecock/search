@@ -75,7 +75,6 @@ public class Query {
             boolean match = false;
             int ptr1 = 0;
             int ptr2 = 0;
-            //todo add null check
             int[] list1 = posting1.get(results[document]).getList();
             int[] list2 = posting2.get(results[document]).getList();
             while (ptr1 < list1.length & ptr2< list2.length){

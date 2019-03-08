@@ -15,7 +15,14 @@ public class Indexer {
     }
 
     public int indexDirectory(String path) {
-        int scanned = documentList.scanDir(new File(path));
+        File directory = getDirectoryFromPath(path);
+        int scanned = documentList.scanDir(directory);
+        return scanFiles(scanned);
+    }
+
+    public int indexDirectory(String path, int maxFiles) {
+        File directory = getDirectoryFromPath(path);
+        int scanned = documentList.scanDir(directory, maxFiles);
         return scanFiles(scanned);
     }
 
@@ -26,9 +33,10 @@ public class Indexer {
         return scanned;
     }
 
-    public int indexDirectory(String path, int maxFiles) {
-        int scanned = documentList.scanDir(new File(path), maxFiles);
-        return scanFiles(scanned);
+    private File getDirectoryFromPath(String path) {
+        File directory = new File(path);
+        if ( directory == null || !directory.isDirectory()) throw new InvalidDirectoryException("Path is not valid");
+        return directory;
     }
 
     public DocumentList getDocumentList() {

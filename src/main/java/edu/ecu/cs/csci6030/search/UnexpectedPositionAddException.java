@@ -11,7 +11,7 @@ public class UnexpectedPositionAddException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Create a new NameNotDefinedException.
+     * Create a new UnexpectedPositionAddException.
      *
      * @param msg the exception message
      */
