@@ -23,7 +23,7 @@ public class QueryTest {
     public void  nullQueryTest() {
         Query query = new Query(null,null,null);
         EasyMock.replay(index, posting);
-        assertArrayEquals(null,  query.search(index));
+        assertArrayEquals(new int[0],  query.search(index));
         EasyMock.verify(index, posting);
     }
 

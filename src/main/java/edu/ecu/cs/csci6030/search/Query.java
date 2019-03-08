@@ -37,39 +37,34 @@ public class Query {
     }
 
     public int[] search(PositionalIndex index) {
-        int[] results = null;
+        int[] results = new int[0];
         int[] list1 = null;
         PositionalPosting posting1 = null;
         PositionalPosting posting2 = null;
-        if (term1 != null) {
+        if (term1 == null) {
+            return results;
+        } else {
             posting1 = index.getPosting(term1);
-            //todo test null check
             if (null != posting1) {
                 list1 = posting1.getDocumentList();
-                results = Arrays.copyOf(list1, list1.length);
             } else {
-                separation = null;
-                //No point in measuring distance if term not in any documents;
+                //null AND anything will be null, so quit looking
+                return results;
             }
         }
         if (term2 != null) {
             posting2 = index.getPosting(term2);
             int[] list2 =null;
             if (null != posting2) {
-                list2 = posting1.getDocumentList();
-                if (list1 == null) {
-                    results = Arrays.copyOf(list2, list2.length);
-                }
+                list2 = posting2.getDocumentList();
             } else {
-                separation = null;
-                //No point in measuring distance if term not in any documents;
-                results = null;
+                return results;
                 //Intersection of results with null will be null
             }
-            if (list1 != null & list2 != null ) {
-                final int[] list2copy = Arrays.copyOf(list2, list2.length);
-                results = Arrays.stream(list1).filter(x -> Arrays.stream(list2copy).anyMatch(y -> y == x)).toArray();
-            }
+            int[] finalList2 = list2;
+            results = Arrays.stream(list1).filter(x -> Arrays.stream(finalList2).anyMatch(y -> y == x)).toArray();
+        } else {
+                results = Arrays.copyOf(list1, list1.length);
         }
         if (separation != null) results = intersectPosition(results, posting1, posting2, separation);
         return results;
