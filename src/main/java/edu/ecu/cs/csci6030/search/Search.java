@@ -74,6 +74,7 @@ public class Search {
                 line = line.trim();
 
                 terminal.flush();
+                final long startTime = System.currentTimeMillis();
 
                 if (line.equalsIgnoreCase("quit") || line.equalsIgnoreCase("exit")) {
                     break;
@@ -83,8 +84,11 @@ public class Search {
                     break;
                 } else {
                     int[] results = searchForString(qp, line);
+                    final long stopTime = System.currentTimeMillis();
                     printResults(results, documentList);
+                    System.out.println ("Returned "+results.length+ " documents in "+ (stopTime-startTime) + " milli-seconds.");
                 }
+
 
             }
 
@@ -96,6 +100,7 @@ public class Search {
     }
 
     static void scanDirectory(String directory, Integer maxFiles) {
+        final long startTime = System.currentTimeMillis();
         documentList = new DocumentList();
         index = new PositionalIndex();
         try {
@@ -107,8 +112,6 @@ public class Search {
         Indexer indexer = new Indexer(documentList, fileIndexer);
 
         System.out.println("Scanning Directory "+ directory);
-        //todo verify a good directory before scanning
-        //todo time scanning
         Integer numberScanned = 0;
         try {
             if (null == maxFiles) {
@@ -121,7 +124,8 @@ public class Search {
             System.out.println(directory+ " is not a valid directory");
             System.exit(7);
         }
-        System.out.println("Scanned files: " + numberScanned);
+        final long endTime = System.currentTimeMillis();
+        System.out.println("Scanned " + numberScanned + " files in "+(endTime - startTime)/1000 + " seconds.");
     }
 
     static int[] searchForString(QueryParser qp, String line) {
