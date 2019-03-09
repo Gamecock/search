@@ -37,6 +37,12 @@ public class QueryParserTest {
         parser.parse("United States America");
     }
 
+    @Test(expected = ParseFailureException.class)
+    public void numberWrongPlaceTest() { parser.parse("United States /0"); }
+
+    @Test(expected = ParseFailureException.class)
+    public void numberWrongPlaceTest2() { parser.parse("/7 United States"); }
+
     @Test
     public void booleanQueryTest() {
         query = parser.parse("United States");
